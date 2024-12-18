@@ -1,0 +1,32 @@
+specVersion: "3.1"
+metadata:
+  name: testapp
+type: application
+framework:
+  name: SAPUI5
+  version: "1.131.1"
+  libraries:
+    - name: sap.m
+    - name: sap.ui.core
+    - name: sap.tnt
+    - name: themelib_sap_horizon
+server:
+  customMiddleware:
+    - name: fiori-tools-appreload
+      afterMiddleware: compression
+      configuration:
+        port: 35729
+        path: webapp
+        delay: 300
+    - name: preview-middleware
+      afterMiddleware: compression
+      configuration:
+        test:
+          - framework: Qunit
+          - framework: OPA5
+    - name: ui5-tooling-modules-middleware
+      afterMiddleware: compression
+builder:
+  customTasks:
+  - name: ui5-tooling-modules-task
+    afterTask: replaceVersion
