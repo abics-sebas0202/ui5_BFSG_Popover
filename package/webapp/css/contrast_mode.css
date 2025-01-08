@@ -1,0 +1,114 @@
+.contrastmode-popover .sapMBtn{
+    border: none;
+    outline: none;
+}
+
+.moreColorsButton .sapMBtnInner{
+    border: none;
+    outline: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.moreColorsButton .sapMBtnContent{
+    padding: 10px !important;
+
+} 
+
+.contrastmode-bg-black .sapMBtnInner{
+    background-color: black;
+
+}
+
+.contrastmode-bg-red .sapMBtnInner{
+    background-color: red;
+}
+.contrastmode-bg-yellow .sapMBtnInner{
+    background-color: yellow;
+}
+.contrastmode-bg-green .sapMBtnInner{
+    background-color: green;
+}
+.contrastmode-bg-blue .sapMBtnInner{
+    background-color: blue;
+}
+
+
+.contrastmode-text-black .sapMBtnInner{
+    background-color: black;
+}
+.contrastmode-text-red .sapMBtnInner{
+    background-color: red;
+}
+.contrastmode-text-yellow .sapMBtnInner{
+    background-color: yellow;
+}
+.contrastmode-text-green .sapMBtnInner{
+    background-color: green;
+}
+.contrastmode-text-blue .sapMBtnInner{
+    background-color: blue;
+}
+
+.contrastmode-preview .sapMText  {
+    padding: 15px !important;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 10px;
+}
+
+
+.contrastmode-bg-black {
+    background-color: black;
+    color: white;
+    border-radius: 50%;
+    height: 36px;
+    width: 36px;
+    border: 1px solid #ccc;
+}
+
+.contrastmode-bg-white {
+    background-color: white;
+    color: black;
+    border-radius: 50%;
+    height: 36px;
+    width: 36px;
+    border: 1px solid #ccc;
+}
+
+.contrastmode-bg-blue {
+    background-color: blue;
+    color: white;
+    border-radius: 50%;
+    height: 36px;
+    width: 36px;
+    border: 1px solid #ccc;
+}
+
+.contrastmode-bg-green {
+    background-color: green;
+    color: white;
+    border-radius: 50%;
+    height: 36px;
+    width: 36px;
+    border: 1px solid #ccc;
+}
+
+.contrastmode-text-black,
+.contrastmode-text-white,
+.contrastmode-text-red,
+.contrastmode-text-yellow {
+    border-radius: 50%;
+    height: 36px;
+    width: 36px;
+    border: 1px solid #ccc;
+}
+
+.contrast-mode-footer{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px !important;
+    width: 100%;
+}

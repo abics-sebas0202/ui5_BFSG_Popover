@@ -1,7 +1,33 @@
 <core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
     <ResponsivePopover title="Accessibility Options">
+        <content>
+            <FlexBox direction="Column" alignItems="Center" justifyContent="Center" class="fontSizeControlContainer">
+                <Text 
+                    text="{configModel>/fontConfig/fontSize}" 
+                    class="fontSizeDisplay" 
+                />
+                <!-- Decrease, Reset, Increase Buttons -->
+                <FlexBox alignItems="Center" justifyContent="Center" class="fontSizeButtonsContainer">
+                    <Button 
+                        icon="sap-icon://less" 
+                        press=".onButtonFontSizeChangePress('decrease')" 
+                        class="fontSizeButton"
+                    />
+                    <Button 
+                        icon="sap-icon://reset" 
+                        press=".onButtonFontSizeChangePress('reset')" 
+                        class="fontSizeButton"
+                    />
+                    <Button 
+                        icon="sap-icon://add" 
+                        press=".onButtonFontSizeChangePress('increase')" 
+                        class="fontSizeButton"
+                    />
+                </FlexBox>
+            </FlexBox>
+        </content>
+        <!--
         <VBox>
-        <!-- ugur -->
             <Panel expandable="true">
                 <headerToolbar>
                     <OverflowToolbar>
@@ -32,6 +58,7 @@
                 </content>
             </Panel>
         </VBox>
+        -->
         <endButton>
             <Button text="Close" press="closePopover" />
         </endButton>

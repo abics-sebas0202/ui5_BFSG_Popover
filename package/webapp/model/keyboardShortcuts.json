@@ -1,0 +1,23 @@
+{
+    "shortcuts": [
+        { "action": "Exit Website Navigation", "description": "", "key": "Esc / ↵" },
+        { "action": "Toggle Speech Output", "description": "", "key": "F3" },
+        { "action": "Show This Guide", "description": "", "key": "F2" },
+        { "action": "Select Next Element", "description": "Use SHIFT + TAB to go to the previous element.", "key": "Tab" },
+        { "action": "Reset Focus to Start", "description": "Focuses on the start of the page.", "key": "S" },
+        { "action": "Next Heading", "description": "", "key": "H" },
+        { "action": "Heading Level 1-6", "description": "Select precise headings by pressing numbers 1-6.", "key": "1 - 6" },
+        { "action": "Next Image/Graphic", "description": "", "key": "G" },
+        { "action": "Next Link", "description": "", "key": "K" },
+        { "action": "Next Landmark", "description": "", "key": "D" },
+        { "action": "Next List", "description": "", "key": "L" },
+        { "action": "Next List Item", "description": "", "key": "I" },
+        { "action": "Next Form Field", "description": "", "key": "F" },
+        { "action": "Next Input Field", "description": "", "key": "E" },
+        { "action": "Next Button", "description": "", "key": "B" },
+        { "action": "Next Combo Box", "description": "", "key": "C" },
+        { "action": "Next Embedded Object", "description": "", "key": "O" },
+        { "action": "Start Speech Output Mode", "description": "", "key": "Alt + S" },
+        { "action": "Start Keyboard Navigation", "description": "", "key": "Alt + T" }
+    ]
+}

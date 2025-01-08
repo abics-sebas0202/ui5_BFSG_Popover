@@ -1,55 +1,81 @@
-const JSON = require('sap/ui/model/json/JSONModel');
+const JSONModel = require('sap/ui/model/json/JSONModel');
 const Fragment = require('sap/ui/core/Fragment');
-//blblabla
 class BFSG_Popover {
     constructor(view, control) {
         this.view = view;
         this.control = control;
 
-        this.genConfigModel({});
+        this.genConfigModel();
         this.buildPopover();
         this.attachPress();
         this.fetchStyle();
     }
 
-    getHandler () {
-        return {
-            "fontSize": {
-            "value": document.documentElement.style.fontSize.split("px")[0],
-            "callback": this.changeFontSize
+    genConfigModel () {
+        this.configModel = new JSONModel({
+            "fontConfig": {
+                fontSize: 16,
+                contrastMode: false
             },
-            "contrastMode": {
-                "value": false,
-                "callback": this.changeContrastMode
+            "contrastConfig": {
+                backgroundColor: "white",
+                textColor: "black",
+                previewBackgroundColor: "white",
+                previewTextColor: "black"    
             },
-            "blueLight": {
-                "value": 0,
-                "callback": this.changeBlueLight
+            "blueFilterConfig": {
+                blueFilterActive: false,
+                blueFilterIntensity: 32,
+                blaufilterExpanded: true    
+            },
+            "readWebsiteConfig": {
+                speed: 1.0,
+                volume: 40,
+                isPlaying: false,
+                isPaused: false,
+                currentText: "",
+                mouseReadingActive: false,
+                lastReadElement: null    
             }
-        };        
-    }
+        });
 
-    genConfigModel(config) {
-        const handler = this.getHandler();
-        let o = {};
-        for(let key in handler){
-            o[key] = handler[key].value;
-        }
-        Object.assign(config, o);
-        this.configModel = new JSON(config);
         this.view.setModel(this.configModel, "configModel");
-        this.attachChangeToModel();
     }
 
-    attachChangeToModel() {
-        const handler = this.getHandler();
-        const config = this.configModel.getData();
-        for(let key in config){
-            let binding = this.configModel.bindProperty(`/${key}`);
-            binding.attachChange(handler[key].callback);
+    updateFontSize (oModel, oView, action) {
+        const currentSize = oModel.getProperty("/fontConfig/fontSize");
+        let newSize = currentSize;
+
+        if (action === "increase" && currentSize < 40) {
+            newSize += 2;
+        } else if (action === "decrease" && currentSize > 10) {
+            newSize -= 2;
+        } else if (action === "reset") {
+            newSize = 16;
         }
+
+        oModel.setProperty("/fontConfig/fontSize", newSize);
+        this.applyFontSizeToView(oView, newSize);
+    }
+
+    applyFontSizeToView (oView, fontSize) {
+        oView.findAggregatedObjects(true, (oControl) => {
+            const oDomRef = oControl.getDomRef();
+            if (oDomRef) {
+                oDomRef.style.fontSize = fontSize + "px";
+                this.updateChildFontSize(oDomRef, fontSize);
+            }
+            return false;
+        });
     }
     
+    updateChildFontSize (domElement, fontSize) {
+        const childNodes = domElement.querySelectorAll("*");
+        childNodes.forEach((child) => {
+            child.style.fontSize = fontSize + "px";
+        });
+    }
+
     attachPress() {
         //TODO: check for press event availability
         this.control.attachPress(this.open, this);
@@ -72,7 +98,7 @@ class BFSG_Popover {
     
         let headScript = document.querySelector('script');
         headScript.parentNode.insertBefore(link, headScript);
-      };
+    };
 
 
     open(event) {        
@@ -88,6 +114,12 @@ class BFSG_Popover {
         const contrast = this.getValue();
         contrast ?? this.configModel.setProperty("/blueLight", 0);
         document.body.classList.toggle("high-contrast", contrast); 
+    }
+
+    // Font Size Begin
+
+    onButtonFontSizeChangePress (action) {
+        this.updateFontSize(this.configModel, this.view, action);
     }
 
     changeBlueLight(event) {

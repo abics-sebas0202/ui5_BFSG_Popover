@@ -1,0 +1,11 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core">
+	<ResponsivePopover
+		class="sapUiContentPadding"
+		placement="Left" >
+	
+			<Text text="Hide Images" width="100%"/>
+	
+	</ResponsivePopover>
+</core:FragmentDefinition>

@@ -1,0 +1,61 @@
+<mvc:View
+    controllerName="ui5.walkthrough.controller.App"
+    xmlns="sap.m"
+    xmlns:mvc="sap.ui.core.mvc"
+    displayBlock="true"
+>
+    <Page class="overviewPageHeader" title="Overview Page">
+        <headerContent>
+            <Image 
+                id="idAccessImage" 
+                src="https://www.designedtoinspire.com/blog/wp-content/uploads/2019/05/accessibility-symbol.png" 
+                press="onImageAccessPress" 
+                class="accessBtn"
+                width="65px" 
+            />
+        </headerContent>
+
+        <content>
+            <VBox fitContainer="true" justifyContent="SpaceBetween" alignItems="Stretch" class="mainContentContainer">
+
+                <Title text="Welcome to the Overview Page" level="H1" class="mainTitle" />
+
+                <HBox justifyContent="SpaceBetween" alignItems="Center" class="infoCards">
+                    <VBox class="infoCard">
+                        <Panel headerText="Total Users">
+                            <Text text="1,245" class="infoCardText" />
+                        </Panel>
+                    </VBox>
+                    <VBox class="infoCard">
+                        <Panel headerText="Active Sessions">
+                            <Text text="345" class="infoCardText" />
+                        </Panel>
+                    </VBox>
+                    <VBox class="infoCard">
+                        <Panel headerText="Pending Tasks">
+                            <Text text="12" class="infoCardText" />
+                        </Panel>
+                    </VBox>
+                </HBox>
+
+                <List headerText="Recent Activities" class="activityList">
+                    <StandardListItem
+                        title="User Login"
+                        description="John Doe logged in at 10:30 AM"
+                        icon="sap-icon://employee"
+                    />
+                    <StandardListItem
+                        title="Data Updated"
+                        description="Jane updated product information"
+                        icon="sap-icon://database"
+                    />
+                    <StandardListItem
+                        title="New Order"
+                        description="Order #12345 placed"
+                        icon="sap-icon://cart"
+                    />
+                </List>
+            </VBox>
+        </content>
+    </Page>
+</mvc:View>

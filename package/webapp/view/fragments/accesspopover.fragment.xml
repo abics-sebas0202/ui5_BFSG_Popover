@@ -1,0 +1,134 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+    <ResponsivePopover id="idAccessibilityResponsivePopover" showHeader="false" placement="Left" class="accessibilityResponsivePopover" >
+        
+        <FlexBox direction="Column" class="optionsContainer">
+            
+            <!-- Panel Header Section -->
+            <FlexBox direction="Column">
+                <!-- <FlexBox alignItems="Center" justifyContent="SpaceBetween" >
+                    <Button icon="sap-icon://reset"  class="accessPopoverHeaderIcons"/>
+                    <Button icon="sap-icon://show"  class="accessPopoverHeaderIcons"/>
+                    <Button icon="sap-icon://decline"  class="accessPopoverHeaderIcons"/>
+                </FlexBox> -->
+                <FlexBox alignItems="Center" justifyContent="SpaceBetween" >
+                    <Button icon="sap-icon://action-settings"  class="accessPopoverHeaderIcons" press="onButtonSettingsPress"/>
+                    <Text text="Eye-Able Assistent" class="titleStyle" />
+                    <Button icon="sap-icon://hint"  class="accessPopoverHeaderIcons" press="onButtonInfoPress"/>
+                </FlexBox>
+                
+            </FlexBox>
+              <!-- Sofortansicht Section -->
+            <Panel>
+                        <Button text="Instant View" icon="sap-icon://action" class="accessPopoverContentBtn" press="onInstantViewButtonPress" />
+             </Panel>
+
+            <!-- Schriftgröße Section -->
+            <Panel expandable="true" expanded="{configModel>/schriftgrosseExpanded}" class="expandPanel">
+    <headerToolbar>
+        <OverflowToolbar>
+            <Button text="Font Size" icon="sap-icon://text" class="expandBtn" />
+        </OverflowToolbar>
+    </headerToolbar>
+    <content>
+        <FlexBox direction="Column" alignItems="Center" justifyContent="Center" class="fontSizeControlContainer">
+            <Text 
+                text="{configModel>/fontSize}" 
+                class="fontSizeDisplay" 
+            />
+            <!-- Decrease, Reset, Increase Buttons -->
+            <FlexBox alignItems="Center" justifyContent="Center" class="fontSizeButtonsContainer">
+                <Button 
+                    icon="sap-icon://less" 
+                    press=".onButtonFontSizeChangePress('decrease')" 
+                    class="fontSizeButton"
+                />
+                <Button 
+                    icon="sap-icon://reset" 
+                    press=".onButtonFontSizeChangePress('reset')" 
+                    class="fontSizeButton"
+                />
+                <Button 
+                    icon="sap-icon://add" 
+                    press=".onButtonFontSizeChangePress('increase')" 
+                    class="fontSizeButton"
+                />
+            </FlexBox>
+        </FlexBox>
+    </content>
+</Panel>
+
+    <!-- Contrast Mode Begin -->
+
+            <Panel expandable="true" expanded="{configModel>/kontrastmodusExpanded}" class="expandPanel">
+                <headerToolbar>
+                    <OverflowToolbar>
+                        <Button text="Contrast Mode" icon="sap-icon://light-mode" class="expandBtn"  press="onContrastModeButtonPress" />
+                        <ToolbarSpacer />
+                    </OverflowToolbar>
+                </headerToolbar>
+                <content>
+                    <Button  text="More Colors" press="onMoreColorsButtonPress" class="moreColorsButton"/>
+                </content>
+            </Panel>
+    <!-- Contrast Mode End -->
+
+
+    <!-- Activate BLue Filter Begin -->
+
+            <Panel expandable="true" expanded="{configModel>/blaufilterExpanded}" class="expandPanel">
+                <headerToolbar>
+                    <OverflowToolbar>
+                        <Button 
+                            text="{= ${configModel>/blueFilterActive} ? 'Deactivate Blue Filter' : 'Activate Blue Filter'}" 
+                            icon="sap-icon://lightbulb" 
+                            press="onButtonBlueFilterPress" 
+                            class="expandBtn" 
+                        />
+                    </OverflowToolbar>
+                </headerToolbar>
+                <content>
+                    <VBox class="blueFilterContainer">
+                        <Text text="Intensity" class="intensityLabel" />
+                        <Slider 
+                            value="{configModel>/blueFilterIntensity}" 
+                            liveChange="onBlueFilterIntensitySliderLiveChange" 
+                            class="blueFilterSlider" 
+                        />
+                        <Text text="{= ${configModel>/blueFilterIntensity} + '%'}" class="intensityValue" />
+                    </VBox>
+                </content>
+            </Panel>
+
+
+    <!-- Activate BLue Filter End -->
+
+            <Panel>
+                 <Button text="Night Mode" icon="sap-icon://bed" class="accessPopoverContentBtn" press="onNightModeButtonPress" />
+                
+            </Panel>
+            <Panel>
+                 <Button text="Read Website" icon="sap-icon://microphone" class="accessPopoverContentBtn" press="onReadWebsiteButtonPress" ariaHasPopup="Dialog"/>
+                
+            </Panel>
+            <Panel>
+                <Button icon="sap-icon://keyboard-and-mouse" text="Tab Navigation"  class="accessPopoverContentBtn" press="onTabNavigationButtonPress"/>
+                
+            </Panel>
+            <Panel>
+                <Button icon="sap-icon://palette" text="Color Blindness" class="accessPopoverContentBtn" press="onColorBlindnessButtonPress"/>
+                 
+            </Panel>
+            <Panel>
+                <Button icon="sap-icon://hide" text="Hide Images" class="accessPopoverContentBtn" press="onHideImagesButtonPress"/>
+                 
+            </Panel>
+            <Panel>
+                <Button icon="sap-icon://add" text="More Features" class="accessPopoverContentBtn" press="onMoreFeaturesButtonPress"/>
+                  
+            </Panel>
+            <Panel>
+                <Button icon="sap-icon://refresh" text="Reset All" class="accessPopoverContentBtn"/>
+            </Panel>
+        </FlexBox>
+    </ResponsivePopover>
+</core:FragmentDefinition>

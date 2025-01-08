@@ -1,0 +1,25 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+    <ResponsivePopover
+        id="idKeyboardShortcutsResponsivePopover"
+        title="Guide to Using Keyboard Shortcuts"
+		class="tabNavigationResponsivePopover"
+        placement="Left">
+        <content>
+            <VBox class="sapUiResponsiveMargin tabNavigationVBox" >
+             
+                <Text text="To read text, hover over it with the mouse. Reading can be stopped by a left mouse click or pressing the space bar." />
+                <Text text="You can also use keyboard navigation to have the webpage read aloud. Below are the keyboard commands:" />
+
+                <List items="{keyboardShortcutsModel>/shortcuts}">
+                    <StandardListItem
+                        title="{keyboardShortcutsModel>action}"
+                        description="{keyboardShortcutsModel>description}"
+                        info="{keyboardShortcutsModel>key}" />
+                </List>
+            </VBox>
+        </content>
+        <endButton>
+            <Button icon="sap-icon://decline" press="onButtonCloseKeyboardShortcutsPopoverPress" />
+        </endButton>
+    </ResponsivePopover>
+</core:FragmentDefinition>

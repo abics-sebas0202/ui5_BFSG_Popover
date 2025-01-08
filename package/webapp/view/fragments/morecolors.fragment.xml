@@ -1,0 +1,58 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core">
+	<ResponsivePopover
+        id="idMoreColorsResponsivePopover"
+		class="sapUiContentPadding"
+        title="Contrast Mode"
+		placement="Left" >
+	
+		  <content>
+            <VBox class="contrastmode-container" alignItems="Center" justifyContent="SpaceBetween">
+       
+
+                <!-- Background Color Buttons -->
+                <Text text="Background Color:" class="contrastmode-section sapUiSmallMarginBottom" />
+                <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
+                    <Button class="contrastmode-bg-black" press="onButtonBackgroundBlackPress" />
+                    <Button class="contrastmode-bg-white" press="onButtonBackgroundWhitePress" />
+                    <Button class="contrastmode-bg-red" press="onButtonBackgroundRedPress" />
+                    <Button class="contrastmode-bg-yellow"  press="onButtonBackgroundYellowPress" />
+                    <Button class="contrastmode-bg-green"  press="onButtonBackgroundGreenPress" />
+                    <Button class="contrastmode-bg-blue"  press="onButtonBackgroundBluePress" />
+                </HBox>
+
+
+                <!-- Text Color Buttons -->
+                <Text text="Text Color:" class="contrastmode-section sapUiSmallMarginBottom" />
+                <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
+                    <Button class="contrastmode-text-black" press="onButtonTextBlackPress" />
+                    <Button class="contrastmode-text-white" press="onButtonTextWhitePress" />
+                    <Button class="contrastmode-text-red" press="onButtonTextRedPress" />
+                    <Button class="contrastmode-text-yellow"  press="onButtonTextYellowPress" />
+                    <Button class="contrastmode-text-green"  press="onButtonTextGreenPress" />
+                    <Button class="contrastmode-text-blue"  press="onButtonTextBluePress" />
+                </HBox>
+
+
+                <!-- Preview Box -->
+                <Text text="Preview:" class="contrastmode-section sapUiSmallMarginBottom" />
+                <HBox class="contrastmode-preview sapUiSmallMarginBottom">
+                    <Text id="idCanYouReadThisText" text="Can You Read This?" />
+                </HBox>
+            </VBox>
+        </content>
+        <content>
+            <Toolbar class="contrastmode-footer sapUiTinyMarginTop">
+                <ToolbarSpacer />
+                <FlexBox class="contrast-mode-footer">
+                  <Button icon="sap-icon://reset" tooltip="Reset Changes" press="onButtonContrastResetPress" />
+                    <Button text="Save" type="Accept" press="onSaveButtonPress" />
+                    <Button text="Cancel" type="Reject" press="onCancelButtonPress" />
+                </FlexBox>
+              
+            </Toolbar>
+        </content>
+	
+	</ResponsivePopover>
+</core:FragmentDefinition>
