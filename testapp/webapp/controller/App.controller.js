@@ -16,7 +16,7 @@ sap.ui.define(
     
         initBfsgPopover() {
           let view = this.getView(),
-          button = this.getView().byId("bfsgButton");
+          button = this.getView().byId("idBfsgImage");
             
           new bfsg_popover(view, button);
         }

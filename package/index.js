@@ -1,5 +1,7 @@
 const JSONModel = require('sap/ui/model/json/JSONModel');
 const Fragment = require('sap/ui/core/Fragment');
+const MessageToast = require('sap/m/MessageToast');
+
 class BFSG_Popover {
     constructor(view, control) {
         this.view = view;
@@ -9,6 +11,12 @@ class BFSG_Popover {
         this.buildPopover();
         this.attachPress();
         this.fetchStyle();
+
+
+        this._mouseHoverHandler = this._onMouseHoverRead.bind(this);
+        this._oSpeechSynth = window.speechSynthesis;
+        this._oUtterance = null;
+
     }
 
     genConfigModel () {
@@ -41,6 +49,12 @@ class BFSG_Popover {
 
         this.view.setModel(this.configModel, "configModel");
     }
+
+    changeFontSize(event) {
+        const size = this.getValue()
+        document.documentElement.style.fontSize = `${size}px`;
+    }
+    
 
     updateFontSize (oModel, oView, action) {
         const currentSize = oModel.getProperty("/fontConfig/fontSize");
@@ -76,8 +90,11 @@ class BFSG_Popover {
         });
     }
 
+    onButtonFontSizeChangePress (action) {
+        this.updateFontSize(this.configModel, this.view, action);
+    }
+
     attachPress() {
-        //TODO: check for press event availability
         this.control.attachPress(this.open, this);
     }
 
@@ -105,32 +122,142 @@ class BFSG_Popover {
         this.popover.openBy(event.getSource());
     }
 
-    changeFontSize(event) {
-        const size = this.getValue()
-        document.documentElement.style.fontSize = `${size}px`;
-    }
-
-    changeContrastMode(event) {
-        const contrast = this.getValue();
-        contrast ?? this.configModel.setProperty("/blueLight", 0);
-        document.body.classList.toggle("high-contrast", contrast); 
-    }
+  
 
     // Font Size Begin
 
-    onButtonFontSizeChangePress (action) {
-        this.updateFontSize(this.configModel, this.view, action);
+  
+
+
+    closePopover() {
+        this.popover.close();
     }
 
-    changeBlueLight(event) {
-        let value = this.getValue();
-        value = (100 - value) / 100;
-        document.body.style.filter = `brightness(${value})`;
+    // Popover Open Begin
+
+    onReadWebsiteButtonPress(oEvent) {
+        this.handlePopover(oEvent, this.view, "ui5._bfsg_popover.view.fragments.readwebsite", "_pReadWebsitePopover");
     }
 
-  closePopover() {
-    this.popover.close();
-  }
+    onMoreColorsButtonPress(oEvent) {
+        this.handlePopover(oEvent, this.view, "ui5_bfsg_popover.view.fragments.morecolors", "_oMoreColorsPopover");
+    }
+            
+    onImageAccessPress(oEvent) {
+        this.handlePopover(oEvent, this.view, "ui5_bfsg_popover.view.fragments.accesspopover", "_oPopover");
+    }
+
+    onButtonSettingsPress(oEvent) {
+        this.handlePopover(oEvent, this.view, "ui5_bfsg_popover.view.fragments.settings", "_pSettingsPopover");
+    }
+
+    onButtonInfoPress(oEvent) {
+        this.handlePopover(oEvent, this.view, "ui5_bfsg_popover.view.fragments.info", "_pInfoPopover");
+    }
+
+    onInstantViewButtonPress(oEvent) {
+        this.handlePopover(oEvent, this.view, "ui5_bfsg_popover.view.fragments.instantview", "_pInstantViewPopover");
+    }
+
+
+    onTabNavigationButtonPress(oEvent) {
+        this.handlePopover(oEvent, this.view, "ui5_bfsg_popover.view.fragments.tabnavigation", "_pTabNavigationPopover");
+    }
+
+    onColorBlindnessButtonPress(oEvent) {
+        this.handlePopover(oEvent, this.view, "ui5_bfsg_popover.view.fragments.colorblindness", "_pColorBlindnessPopover");
+    }
+
+    onHideImagesButtonPress(oEvent) {
+        this.handlePopover(oEvent, this.view, "ui5_bfsg_popover.view.fragments.hideimages", "_pHideImagesPopover");
+    }
+
+    onMoreFeaturesButtonPress(oEvent) {
+        this.handlePopover(oEvent, this.view, "ui5_bfsg_popover.view.fragments.morefeatures", "_pMoreFeaturesPopover");
+    }
+
+    handlePopover(oEvent, oView, fragmentName, popoverKey) {
+        if (!this[popoverKey]) {
+            this[popoverKey] = Fragment.load({
+                id: oView.getId(),
+                name: fragmentName,
+                controller: oView.getController()
+            })
+            .then(function (oPopover) {
+                oView.addDependent(oPopover);
+                return oPopover;
+            }.bind(this))
+            .catch(function (err) {
+                console.error("Fragment yüklenirken hata oluştu:", err);
+            });
+        }
+        this[popoverKey].then(function (oPopover) {
+            if (oPopover) {
+                oPopover.openBy(oEvent.getSource());
+            } else {
+                console.error("Popover yüklenemedi veya bulunamadı.");
+            }
+        });
+    }
+
+    // Popover Open End
+
+    //Contrast Mode Begin
+
+    onButtonBackgroundPress(color) {
+        const contrastConfig = this.configModel.getProperty("/contrastConfig");
+        contrastConfig.backgroundColor = color;
+        this.configModel.setProperty("/contrastConfig", contrastConfig);
+        this.updatePreview();
+    }
+
+    onButtonTextPress(color) {
+        const contrastConfig = this.configModel.getProperty("/contrastConfig");
+        contrastConfig.textColor = color;
+        this.configModel.setProperty("/contrastConfig", contrastConfig);
+        this.updatePreview();
+    }
+
+    updatePreview() {
+        const contrastConfig = this.configModel.getProperty("/contrastConfig");
+        const previewElement = document.getElementById("idCanYouReadThisText");
+        if (previewElement) {
+            previewElement.style.backgroundColor = contrastConfig.backgroundColor;
+            previewElement.style.color = contrastConfig.textColor;
+        }
+    }
+
+    onSaveButtonPress() {
+        const contrastConfig = this.configModel.getProperty("/contrastConfig");
+
+        const allElements = document.body.querySelectorAll("*:not(#idMoreColorsResponsivePopover *)");
+        allElements.forEach((element) => {
+            element.style.backgroundColor = contrastConfig.backgroundColor;
+            element.style.color = contrastConfig.textColor;
+        });
+
+        this.closePopover();
+    }
+
+    onResetButtonPress() {
+        this.configModel.setProperty("/contrastConfig", { 
+            backgroundColor: "white", 
+            textColor: "black", 
+            previewBackgroundColor: "white", 
+            previewTextColor: "black" 
+        });
+        this.updatePreview();
+    }
+
+    onCancelButtonPress() {
+        this.updatePreview();
+        this.closePopover();
+    }
+
+
+    //Contrast Mode End
+
+
 }
 
 module.exports = BFSG_Popover

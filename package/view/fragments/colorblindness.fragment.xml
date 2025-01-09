@@ -2,7 +2,6 @@
 	xmlns="sap.m"
 	xmlns:core="sap.ui.core">
 	<ResponsivePopover
-		title="{Name}"
 		class="sapUiContentPadding"
 		placement="Left" >
 	
