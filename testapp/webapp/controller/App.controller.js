@@ -8,8 +8,8 @@ sap.ui.define(
         this._oPopoverControl = new PopoverControl(this.getView());
       },
 
-      onImageOpenPopoverPress: function () {
-        const oButton = this.byId("idOpenPopoverImage");
+      onIconOpenPopoverPress: function () {
+        const oButton = this.byId("idOpenPopoverIcon");
         this._oPopoverControl.open(oButton);
       },
     });

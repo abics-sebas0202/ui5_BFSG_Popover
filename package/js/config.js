@@ -5,8 +5,13 @@ function initModel(view) {
     font: {
       fontSize: 16,
       contrastMode: false,
+      isExpanded: false,
+
     },
     contrast: {
+      contrastValue:1,
+      isActive: false,
+      isExpanded: false,
       backgroundColor: "white",
       textColor: "black",
       previewBackgroundColor: "white",
@@ -17,11 +22,12 @@ function initModel(view) {
       }
     },
     blueFilter: {
-      blueFilterActive: false,
+      isActive: false,
       blueFilterIntensity: 32,
-      blaufilterExpanded: true,
+      blaufilterExpanded: false,
     },
     readWebsite: {
+      isExpanded: false,
       speed: 1.0,
       volume: 40,
       isPlaying: false,

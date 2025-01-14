@@ -1,86 +1,161 @@
-function toggleContrastMode(oModel, contrastModel, oView) {
-    const bContrastMode = oModel.getProperty("/contrastMode");
-    const bNewContrastMode = !bContrastMode;
-    oModel.setProperty("/contrastMode", bNewContrastMode);
+function onContrastModeButtonPress(oModel, oBody) {
+    const isExpanded = oModel.getProperty("/contrast/isExpanded");
+    const isContrastActive = oModel.getProperty("/contrast/isActive"); // Contrast modu kontrolü
 
-    if (bNewContrastMode) {
-        const backgroundColor = contrastModel.getProperty("/contrast/backgroundColor");
-        const textColor = contrastModel.getProperty("/contrast/textColor");
-        applyColorsToPage(oView, backgroundColor, textColor);
-        sap.m.MessageToast.show("Contrast mode activated.");
+    // Panel toggle
+    oModel.setProperty("/contrast/isExpanded", !isExpanded);
+
+    if (!isContrastActive) {
+        // Varsayılan contrast modu değerini uygula
+        const defaultContrastValue = 1.5; // Varsayılan contrast oranı (örneğin, 1.5)
+        oBody.style.filter = `contrast(${defaultContrastValue})`;
+
+        // Modeli güncelle
+        oModel.setProperty("/contrast/isActive", true);
+        oModel.setProperty("/contrast/contrastValue", defaultContrastValue);
+
+        console.log(`Contrast mode activated with value ${defaultContrastValue}.`);
     } else {
-        resetContrast(oModel, oView);
-        sap.m.MessageToast.show("Contrast mode deactivated. Changes reset to default.");
+        // Contrast modunu devre dışı bırak
+        oBody.style.filter = ""; // Varsayılan görünüm
+        oModel.setProperty("/contrast/isActive", false);
+        oModel.setProperty("/contrast/contrastValue", 1); // Varsayılan contrast
+
+        console.log("Contrast mode deactivated.");
     }
 }
 
-function updateBackgroundColor(oView, color, textColor) {
-    updatePreview(oView, color, textColor);
-}
 
-function updateTextColor(oView, color) {
-    updatePreview(oView, getCurrentBackgroundColor(oView), color);
-}
+function contrastPreviewBgColorPress(oEvent, view, configModel) {
+    const oButton = oEvent.getSource();
+    const aCustomData = oButton.getCustomData();
 
-function saveContrastSettings(oView) {
-    const oText = oView.byId("idCanYouReadThisText");
-    const backgroundColor = oText.getDomRef().style.backgroundColor || "white";
-    const textColor = oText.getDomRef().style.color || "black";
+    if (!aCustomData || aCustomData.length === 0) {
+        console.error("CustomData not found on button!");
+        return;
+    }
 
-    applyColorsToPage(oView, backgroundColor, textColor);
-    sap.m.MessageToast.show("Colors applied successfully!");
-}
+    const sBgColor = aCustomData[0].getValue();
+    const oTextControl = view.byId("idCanYouReadThisText");
+    let oDomRef;
+    if (oTextControl) {
+        oDomRef = oTextControl.getDomRef(); 
+    } else {
+        console.error("Text control not found in SAPUI5 context! Trying direct DOM ID access...");
+        oDomRef = document.getElementById("container-testapp---MainView--uniquePopover--idCanYouReadThisText");
+    }
 
-function resetContrast(oModel, oView) {
-    const defaultBackgroundColor = "white";
-    const defaultTextColor = "black";
-
-    oView.findAggregatedObjects(true, (oControl) => {
-        const oDomRef = oControl.getDomRef();
-        if (oDomRef) {
-            oDomRef.style.backgroundColor = "";
-            oDomRef.style.color = "";
-
-            const childNodes = oDomRef.querySelectorAll("*");
-            childNodes.forEach((child) => {
-                child.style.backgroundColor = "";
-                child.style.color = "";
-            });
-        }
-        return false;
-    });
-
-    oModel.setProperty("/contrast/backgroundColor", defaultBackgroundColor);
-    oModel.setProperty("/contrast/textColor", defaultTextColor);
-}
-
-function applyColorsToPage(oView, backgroundColor, textColor) {
-    const allElements = document.body.querySelectorAll("*");
-    allElements.forEach((element) => {
-      element.style.backgroundColor = backgroundColor;
-      element.style.color = textColor;
-    });
-  }
-  
-
-function updatePreview(oView, backgroundColor, textColor) {
-    const oText = oView.byId("idCanYouReadThisText");
-    if (oText) {
-        oText.getDomRef().style.backgroundColor = backgroundColor;
-        oText.getDomRef().style.color = textColor;
+    if (oDomRef) {
+        oDomRef.style.backgroundColor = sBgColor; 
+        configModel.setProperty("/contrast/buttonsVisible", true);
+    } else {
+        console.error("DOM element not found!");
     }
 }
 
-function getCurrentBackgroundColor(oView) {
-    const oText = oView.byId("idCanYouReadThisText");
-    return oText && oText.getDomRef() ? oText.getDomRef().style.backgroundColor || "white" : "white";
+function contrastPreviewTextColorPress(oEvent, view, configModel) {
+    const oButton = oEvent.getSource();
+    const aCustomData = oButton.getCustomData();
+
+    if (!aCustomData || aCustomData.length === 0) {
+        console.error("CustomData not found on button!");
+        return;
+    }
+
+    const sTextColor = aCustomData[0].getValue(); 
+
+    const oTextControl = view.byId("idCanYouReadThisText");
+    let oDomRef;
+    if (oTextControl) {
+        oDomRef = oTextControl.getDomRef();
+    } else {
+        console.error("Text control not found in SAPUI5 context! Trying direct DOM ID access...");
+        oDomRef = document.getElementById("container-testapp---MainView--uniquePopover--idCanYouReadThisText");
+    }
+
+    if (oDomRef) {
+        oDomRef.style.color = sTextColor;
+        configModel.setProperty("/contrast/buttonsVisible", true);
+    } else {
+        console.error("DOM element not found!");
+    }
+}
+
+function onButtonContrastResetPress(view, configModel) {
+    const sDefaultBgColor = "white";
+    const sDefaultTextColor = "black";
+
+    const oTextControl = view.byId("idCanYouReadThisText");
+    let oDomRef;
+    if (oTextControl) {
+        oDomRef = oTextControl.getDomRef();
+    } else {
+        console.error("Text control not found in SAPUI5 context! Trying direct DOM ID access...");
+        oDomRef = document.getElementById("container-testapp---MainView--uniquePopover--idCanYouReadThisText");
+    }
+
+    if (oDomRef) {
+        oDomRef.style.backgroundColor = sDefaultBgColor;
+        oDomRef.style.color = sDefaultTextColor;
+    } else {
+        console.error("DOM element not found!");
+    }
+
+    configModel.setProperty("/contrast/buttonsVisible", false);
+    console.log("Colors have been reset to default values.");
+}
+
+function onSaveButtonPress(view, configModel) {
+    const oTextControl = view.byId("idCanYouReadThisText");
+    let oDomRef;
+    if (oTextControl) {
+        oDomRef = oTextControl.getDomRef();
+    } else {
+        console.error("Text control not found in SAPUI5 context! Trying direct DOM ID access...");
+        oDomRef = document.getElementById("container-testapp---MainView--uniquePopover--idCanYouReadThisText");
+    }
+
+    if (oDomRef) {
+        const sCurrentBgColor = oDomRef.style.backgroundColor || "white";
+        const sCurrentTextColor = oDomRef.style.color || "black";
+
+        console.log(`Saved settings: Background Color = ${sCurrentBgColor}, Text Color = ${sCurrentTextColor}`);
+    } else {
+        console.error("DOM element not found for saving!");
+    }
+
+    configModel.setProperty("/contrast/buttonsVisible", false);
+}
+
+function onCancelButtonPress(view, configModel) {
+    const sBgColor = configModel.getProperty("/contrast/backgroundColor");
+    const sTextColor = configModel.getProperty("/contrast/textColor");
+
+    const oTextControl = view.byId("idCanYouReadThisText");
+    let oDomRef;
+    if (oTextControl) {
+        oDomRef = oTextControl.getDomRef();
+    } else {
+        console.error("Text control not found in SAPUI5 context! Trying direct DOM ID access...");
+        oDomRef = document.getElementById("container-testapp---MainView--uniquePopover--idCanYouReadThisText");
+    }
+
+    if (oDomRef) {
+        oDomRef.style.backgroundColor = sBgColor;
+        oDomRef.style.color = sTextColor;
+    } else {
+        console.error("DOM element not found!");
+    }
+
+    configModel.setProperty("/contrast/buttonsVisible", false);
+    console.log("Changes have been canceled.");
 }
 
 module.exports = {
-    toggleContrastMode,
-    updateBackgroundColor,
-    updateTextColor,
-    saveContrastSettings,
-    resetContrast,
-    applyColorsToPage,
+    onContrastModeButtonPress,
+    contrastPreviewBgColorPress,
+    contrastPreviewTextColorPress,
+    onButtonContrastResetPress,
+    onSaveButtonPress,
+    onCancelButtonPress,
 };

@@ -15,6 +15,17 @@ const {
   decreaseSpeed,
   getVisibleTextFromPage,
 } = require("./js/readWebsite");
+const {
+  onContrastModeButtonPress,
+  contrastPreviewBgColorPress,
+  contrastPreviewTextColorPress,
+  onButtonContrastResetPress,
+  onSaveButtonPress,
+  onCancelButtonPress,
+} = require("./js/contrast");
+const { onButtonBlueFilterPress, onBlueFilterIntensitySliderLiveChange } = require("./js/bluefilter");
+const { onNightModeButtonPress } = require("./js/nightmode");
+const { onHideImagesButtonPress } = require("./js/hideimages");
 
 class npm_popover {
   constructor(view, control) {
@@ -59,6 +70,11 @@ class npm_popover {
 
   // Font Size Feature Handlers Begin
 
+  onFontSizePress() {
+    const isExpanded = this.configModel.getProperty("/font/isExpanded");
+    this.configModel.setProperty("/font/isExpanded", !isExpanded);
+  }
+
   onButtonFontSizeChangePress(action) {
     updateFontSize(this.configModel, this.view, action);
   }
@@ -67,8 +83,14 @@ class npm_popover {
 
   // Read Website Feature Handlers Begin
 
+  onReadWebsitePress() {
+    const isExpanded = this.configModel.getProperty("/readWebsite/isExpanded");
+    this.configModel.setProperty("/readWebsite/isExpanded", !isExpanded);
+
+  }
+
   onIconStartReadPress() {
-    const getVisibleText = getVisibleTextFromPage; 
+    const getVisibleText = getVisibleTextFromPage;
     startReading(this.configModel, this.speechSynth, getVisibleText);
   }
 
@@ -88,158 +110,62 @@ class npm_popover {
 
   // Contrast Mode Begin
 
+  onContrastModeButtonPress() {
+    onContrastModeButtonPress(this.configModel, document.body);
+  }
+
   contrastPreviewBgColorPress(oEvent) {
-    const oButton = oEvent.getSource();
-    const aCustomData = oButton.getCustomData();
-
-    if (!aCustomData || aCustomData.length === 0) {
-        console.error("CustomData not found on button!");
-        return;
-    }
-
-    const sBgColor = aCustomData[0].getValue(); // CustomData'dan renk alın
-
-    // Text kontrolünü bul
-    const oTextControl = this.view.byId("idCanYouReadThisText");
-    let oDomRef;
-    if (oTextControl) {
-        oDomRef = oTextControl.getDomRef(); // DOM referansı al
-    } else {
-        console.error("Text control not found in SAPUI5 context! Trying direct DOM ID access...");
-        oDomRef = document.getElementById("container-testapp---MainView--uniquePopover--idCanYouReadThisText");
-    }
-
-    if (oDomRef) {
-        oDomRef.style.backgroundColor = sBgColor; // Arka plan rengini değiştir
-        this.configModel.setProperty("/contrast/buttonsVisible", true); // Butonları görünür yap
-    } else {
-        console.error("DOM element not found!");
-    }
-}
-
-
-
+    contrastPreviewBgColorPress(oEvent, this.view, this.configModel);
+  }
 
   contrastPreviewTextColorPress(oEvent) {
-    const oButton = oEvent.getSource();
-    const aCustomData = oButton.getCustomData();
-
-    if (!aCustomData || aCustomData.length === 0) {
-        console.error("CustomData not found on button!");
-        return;
-    }
-
-    const sTextColor = aCustomData[0].getValue(); // CustomData'dan renk alın
-
-    // Text kontrolünü bul
-    const oTextControl = this.view.byId("idCanYouReadThisText");
-    let oDomRef;
-    if (oTextControl) {
-        oDomRef = oTextControl.getDomRef(); // DOM referansı al
-    } else {
-        console.error("Text control not found in SAPUI5 context! Trying direct DOM ID access...");
-        oDomRef = document.getElementById("container-testapp---MainView--uniquePopover--idCanYouReadThisText");
-    }
-
-    if (oDomRef) {
-        oDomRef.style.color = sTextColor; // Metin rengini değiştir
-        this.configModel.setProperty("/contrast/buttonsVisible", true); // Butonları görünür yap
-    } else {
-        console.error("DOM element not found!");
-    }
-}
-
-
-
+    contrastPreviewTextColorPress(oEvent, this.view, this.configModel);
+  }
 
   onButtonContrastResetPress() {
-    const sDefaultBgColor = "white";
-    const sDefaultTextColor = "black";
-
-    // Text kontrolünü bul
-    const oTextControl = this.view.byId("idCanYouReadThisText");
-    let oDomRef;
-    if (oTextControl) {
-        oDomRef = oTextControl.getDomRef(); // DOM referansı al
-    } else {
-        console.error("Text control not found in SAPUI5 context! Trying direct DOM ID access...");
-        oDomRef = document.getElementById("container-testapp---MainView--uniquePopover--idCanYouReadThisText");
-    }
-
-    if (oDomRef) {
-        oDomRef.style.backgroundColor = sDefaultBgColor;
-        oDomRef.style.color = sDefaultTextColor;
-    } else {
-        console.error("DOM element not found!");
-    }
-
-    // Butonları gizle
-    this.configModel.setProperty("/contrast/buttonsVisible", false);
-    console.log("Colors have been reset to default values.");
-}
-
-
+    onButtonContrastResetPress(this.view, this.configModel);
+  }
 
   onSaveButtonPress() {
-    const oTextControl = this.view.byId("idCanYouReadThisText");
-    let oDomRef;
-    if (oTextControl) {
-        oDomRef = oTextControl.getDomRef();
-    } else {
-        console.error("Text control not found in SAPUI5 context! Trying direct DOM ID access...");
-        oDomRef = document.getElementById("container-testapp---MainView--uniquePopover--idCanYouReadThisText");
-    }
-
-    if (oDomRef) {
-        const sCurrentBgColor = oDomRef.style.backgroundColor || "white";
-        const sCurrentTextColor = oDomRef.style.color || "black";
-
-        console.log(`Saved settings: Background Color = ${sCurrentBgColor}, Text Color = ${sCurrentTextColor}`);
-    } else {
-        console.error("DOM element not found for saving!");
-    }
-
-    // Butonları gizle
-    this.configModel.setProperty("/contrast/buttonsVisible", false);
-}
-
-
+    onSaveButtonPress(this.view, this.configModel);
+  }
 
   onCancelButtonPress() {
-    const oModel = this.view.getModel("configModel");
-    if (oModel) {
-        const sBgColor = oModel.getProperty("/contrast/backgroundColor");
-        const sTextColor = oModel.getProperty("/contrast/textColor");
-
-        const oTextControl = this.view.byId("idCanYouReadThisText");
-        let oDomRef;
-        if (oTextControl) {
-            oDomRef = oTextControl.getDomRef();
-        } else {
-            console.error("Text control not found in SAPUI5 context! Trying direct DOM ID access...");
-            oDomRef = document.getElementById("container-testapp---MainView--uniquePopover--idCanYouReadThisText");
-        }
-
-        if (oDomRef) {
-            oDomRef.style.backgroundColor = sBgColor;
-            oDomRef.style.color = sTextColor;
-        } else {
-            console.error("DOM element not found!");
-        }
-
-        // Butonları gizle
-        oModel.setProperty("/contrast/buttonsVisible", false);
-        console.log("Changes have been canceled.");
-    }
-}
-
-
-
-
-
-
+    onCancelButtonPress(this.view, this.configModel);
+  }
 
   // Contrast Mode End
+
+  // Hide Images Begin
+
+  onHideImagesButtonPress() {
+    this.imagesHidden = onHideImagesButtonPress(this.view, this.imagesHidden);
+  }
+
+
+  // Hide Images End
+
+  // Night Mode Begin
+
+  onNightModeButtonPress() {
+    onNightModeButtonPress(sap.ui.getCore());
+  }
+  // Night Mode End
+
+  // Blue Filter Begin
+
+  onButtonBlueFilterPress() {
+    onButtonBlueFilterPress(this.configModel, document.body);
+  }
+
+  onBlueFilterIntensitySliderLiveChange(oEvent) {
+    const intensity = oEvent.getParameter("value");
+    onBlueFilterIntensitySliderLiveChange(this.configModel, intensity, document.body);
+  }
+
+
+
+  // Blue Filter End
 }
 
 module.exports = npm_popover;

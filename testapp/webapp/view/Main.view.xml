@@ -1,10 +1,17 @@
 <mvc:View
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m"
+    xmlns:core="sap.ui.core"
     controllerName="testapp.controller.App">
      <Page id="idMainViewPage" title="Simple Popover Test">
         <content>
-            <Image class="idOpenPopoverImageClass"  id="idOpenPopoverImage" src="https://www.designedtoinspire.com/blog/wp-content/uploads/2019/05/accessibility-symbol.png" width="80px" press=".onImageOpenPopoverPress" />
+            	<core:Icon class="idOpenPopoverButtonClass" id="idOpenPopoverIcon" press=".onIconOpenPopoverPress"
+                    src="sap-icon://accessibility"
+                    width="2em">
+                    <core:layoutData>
+                        <FlexItemData growFactor="1" />
+                    </core:layoutData>
+                </core:Icon>
             <FlexBox wrap="Wrap" class="sapUiLargeMarginTop" justifyContent="SpaceBetween" alignItems="Center" width="100%">
             	<Image src="https://gratisography.com/wp-content/uploads/2024/03/gratisography-funflower-800x525.jpg" width="300px" />
             	<Image src="https://gratisography.com/wp-content/uploads/2024/01/gratisography-cyber-kitty-800x525.jpg" width="300px" />

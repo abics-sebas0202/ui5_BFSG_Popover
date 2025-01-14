@@ -1,4 +1,3 @@
-
 function updateFontSize(oModel, oView, action) {
     console.log("Font size action:", action);
     const currentSize = oModel.getProperty("/font/fontSize");
@@ -12,7 +11,7 @@ function updateFontSize(oModel, oView, action) {
         newSize = 16;
     }
 
-    oModel.setProperty("/font/fontSize", newSize); // Modelde font size güncelle
+    oModel.setProperty("/font/fontSize", newSize); 
     applyFontSizeToView(oView, newSize);
 }
 

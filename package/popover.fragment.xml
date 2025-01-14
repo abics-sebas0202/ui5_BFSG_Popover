@@ -5,10 +5,10 @@
 
             <!-- Font Size Begin -->
 
-            <Panel expandable="true" class="expandPanel">
+            <Panel expandable="true" class="expandPanel" expanded="{configModel>/font/isExpanded}" >
                 <headerToolbar>
                     <OverflowToolbar>
-                        <Button text="Font Size" icon="sap-icon://text" class="expandBtn" />
+                        <Button text="Font Size" icon="sap-icon://text" class="expandBtn" press="onFontSizePress" />
                     </OverflowToolbar>
                 </headerToolbar>
                 <content>
@@ -20,7 +20,7 @@
 
             <!-- Contrast Mode Begin -->
 
-            <Panel expandable="true" class="expandPanel">
+            <Panel expandable="true" class="expandPanel" expanded="{configModel>/contrast/isExpanded}">
                 <headerToolbar>
                     <OverflowToolbar>
                         <Button text="Contrast Mode" icon="sap-icon://light-mode" class="expandBtn" press="onContrastModeButtonPress" />
@@ -38,10 +38,10 @@
 
             <!-- Activate BLue Filter Begin -->
 
-            <Panel expandable="true" class="expandPanel">
+            <Panel expandable="true" class="expandPanel" expanded="{configModel>/blueFilter/blaufilterExpanded}">
                 <headerToolbar>
                     <OverflowToolbar>
-                        <Button text="Activate Blue Filter" icon="sap-icon://lightbulb" press="onButtonBlueFilterPress" class="expandBtn" />
+                        <Button text="{= ${configModel>/blueFilter/isActive} ? 'Deactivate Blue Filter' : 'Activate Blue Filter'}" icon="sap-icon://lightbulb" press="onButtonBlueFilterPress" class="expandBtn" />
                     </OverflowToolbar>
                 </headerToolbar>
                 <content>
@@ -59,10 +59,10 @@
 
             <!-- Read Website Begin -->
 
-            <Panel expandable="true"  class="expandPanel">
+            <Panel expandable="true"  class="expandPanel" expanded="{configModel>/readWebsite/isExpanded}" >
                 <headerToolbar>
                     <OverflowToolbar>
-                        <Button text="Read Website" icon="sap-icon://sound-loud"  class="expandBtn" />
+                        <Button text="Read Website" icon="sap-icon://sound-loud"  class="expandBtn" press="onReadWebsitePress" />
                     </OverflowToolbar>
                 </headerToolbar>
                 <content>
@@ -90,17 +90,8 @@
             </Panel>
 
             <!-- Tab Navigation End -->
-
-            <!-- Color Blindness Begin  -->
-
-            <Panel>
-                <Button icon="sap-icon://palette" text="Color Blindness" class="accessPopoverContentBtn" press="onColorBlindnessButtonPress"/>
-
-            </Panel>
-
-            <!-- Color Blindness End  -->
-
-            <!-- Hide Images Begin -->
+            
+             <!-- Hide Images Begin -->
 
             <Panel>
                 <Button icon="sap-icon://hide" text="Hide Images" class="accessPopoverContentBtn" press="onHideImagesButtonPress"/>
@@ -108,25 +99,7 @@
             </Panel>
 
             <!-- Hide Images End -->
-
-            <!-- More Features Begin -->
-
-            <Panel>
-                <Button icon="sap-icon://add" text="More Features" class="accessPopoverContentBtn" press="onMoreFeaturesButtonPress"/>
-
-            </Panel>
-
-            <!-- More Features End -->
-
-            <!-- Reset All Begin -->
-
-            <Panel>
-                <Button icon="sap-icon://refresh" text="Reset All" class="accessPopoverContentBtn"/>
-            </Panel>
-
-            <!-- Reset All End -->
-
-        </FlexBox>
+            </FlexBox>
         <endButton>
             <Button text="Close" press="onClose" />
         </endButton>
