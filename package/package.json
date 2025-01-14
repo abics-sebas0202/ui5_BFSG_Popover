@@ -1,6 +1,6 @@
 {
   "name": "ui5_bfsg_popover",
-  "version": "0.2.11",
+  "version": "0.3.1",
   "description": "SAPUI5 Popover to fullfil BFSG requirements",
   "main": "src/index.js",
   "scripts": {
