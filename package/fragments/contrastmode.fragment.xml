@@ -74,12 +74,11 @@
                 <Text id="idCanYouReadThisText" text="Can You Read This?" />
             </HBox>
         </VBox>
-        <Toolbar class="contrastmode-footer sapUiTinyMarginTop">
+        <Toolbar class="contrastmode-footer sapUiTinyMarginTop" visible="{configModel>/contrast/buttonsVisible}">
             <ToolbarSpacer />
             <FlexBox class="contrast-mode-footer">
-                <Button icon="sap-icon://reset" tooltip="Reset Changes" press=".onButtonContrastResetPress"/>
-                <Button text="Save" type="Accept" press=".onSaveButtonPress" />
-                <Button text="Cancel" type="Reject" press=".onCancelButtonPress" />
+                <Button icon="sap-icon://save" type="Accept" press=".onSaveButtonPress" />
+                <Button icon="sap-icon://reset" press=".onButtonContrastResetPress"/>
 
             </FlexBox>
         </Toolbar>

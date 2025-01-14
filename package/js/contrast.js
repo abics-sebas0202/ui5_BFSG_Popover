@@ -1,25 +1,19 @@
 function onContrastModeButtonPress(oModel, oBody) {
     const isExpanded = oModel.getProperty("/contrast/isExpanded");
-    const isContrastActive = oModel.getProperty("/contrast/isActive"); // Contrast modu kontrolü
-
-    // Panel toggle
+    const isContrastActive = oModel.getProperty("/contrast/isActive");
     oModel.setProperty("/contrast/isExpanded", !isExpanded);
 
     if (!isContrastActive) {
-        // Varsayılan contrast modu değerini uygula
-        const defaultContrastValue = 1.5; // Varsayılan contrast oranı (örneğin, 1.5)
+        const defaultContrastValue = 1.5; 
         oBody.style.filter = `contrast(${defaultContrastValue})`;
-
-        // Modeli güncelle
         oModel.setProperty("/contrast/isActive", true);
         oModel.setProperty("/contrast/contrastValue", defaultContrastValue);
 
         console.log(`Contrast mode activated with value ${defaultContrastValue}.`);
     } else {
-        // Contrast modunu devre dışı bırak
-        oBody.style.filter = ""; // Varsayılan görünüm
+        oBody.style.filter = ""; 
         oModel.setProperty("/contrast/isActive", false);
-        oModel.setProperty("/contrast/contrastValue", 1); // Varsayılan contrast
+        oModel.setProperty("/contrast/contrastValue", 1); 
 
         console.log("Contrast mode deactivated.");
     }
@@ -80,11 +74,18 @@ function contrastPreviewTextColorPress(oEvent, view, configModel) {
         console.error("DOM element not found!");
     }
 }
-
 function onButtonContrastResetPress(view, configModel) {
     const sDefaultBgColor = "white";
     const sDefaultTextColor = "black";
 
+    // Reset all DOM elements
+    const aElements = document.querySelectorAll("*");
+    aElements.forEach((element) => {
+        element.style.backgroundColor = "";
+        element.style.color = "";
+    });
+
+    // Reset the preview text
     const oTextControl = view.byId("idCanYouReadThisText");
     let oDomRef;
     if (oTextControl) {
@@ -120,36 +121,20 @@ function onSaveButtonPress(view, configModel) {
         const sCurrentTextColor = oDomRef.style.color || "black";
 
         console.log(`Saved settings: Background Color = ${sCurrentBgColor}, Text Color = ${sCurrentTextColor}`);
+
+        // Apply to all DOM elements
+        const aElements = document.querySelectorAll("*");
+        aElements.forEach((element) => {
+            element.style.backgroundColor = sCurrentBgColor;
+            element.style.color = sCurrentTextColor;
+        });
+
+        configModel.setProperty("/contrast/isExpanded", false);
     } else {
         console.error("DOM element not found for saving!");
     }
-
-    configModel.setProperty("/contrast/buttonsVisible", false);
 }
 
-function onCancelButtonPress(view, configModel) {
-    const sBgColor = configModel.getProperty("/contrast/backgroundColor");
-    const sTextColor = configModel.getProperty("/contrast/textColor");
-
-    const oTextControl = view.byId("idCanYouReadThisText");
-    let oDomRef;
-    if (oTextControl) {
-        oDomRef = oTextControl.getDomRef();
-    } else {
-        console.error("Text control not found in SAPUI5 context! Trying direct DOM ID access...");
-        oDomRef = document.getElementById("container-testapp---MainView--uniquePopover--idCanYouReadThisText");
-    }
-
-    if (oDomRef) {
-        oDomRef.style.backgroundColor = sBgColor;
-        oDomRef.style.color = sTextColor;
-    } else {
-        console.error("DOM element not found!");
-    }
-
-    configModel.setProperty("/contrast/buttonsVisible", false);
-    console.log("Changes have been canceled.");
-}
 
 module.exports = {
     onContrastModeButtonPress,
@@ -157,5 +142,4 @@ module.exports = {
     contrastPreviewTextColorPress,
     onButtonContrastResetPress,
     onSaveButtonPress,
-    onCancelButtonPress,
 };

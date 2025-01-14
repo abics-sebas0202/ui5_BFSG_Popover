@@ -9,6 +9,7 @@ function initModel(view) {
 
     },
     contrast: {
+      buttonsVisible: false,
       contrastValue:1,
       isActive: false,
       isExpanded: false,
@@ -33,7 +34,7 @@ function initModel(view) {
       isPlaying: false,
       isPaused: false,
       currentText: "",
-      mouseReadingActive: false,
+      isPointerReadEnabled: false,
       lastReadElement: null,
     },
   });

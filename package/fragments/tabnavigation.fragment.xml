@@ -17,8 +17,5 @@
                 </List>
             </VBox>
         </content>
-        <endButton>
-            <Button icon="sap-icon://decline" press="onButtonCloseKeyboardShortcutsPopoverPress" />
-        </endButton>
     </ResponsivePopover>
 </core:FragmentDefinition>

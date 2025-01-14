@@ -1,32 +1,28 @@
 <core:FragmentDefinition xmlns="sap.m"
     xmlns:core="sap.ui.core">
-            <VBox>
-                <VBox class="sapUiSmallMargin">
-                    <Text text="Read With Pointer" />
+            <VBox justifyContent="Center" alignItems="Center">
+                <HBox class="sapUiSmallMargin" >
+                    <Text text="Pointer" />
                     <Switch change="onSwitchPointerReadChange">
                         <layoutData>
                             <FlexItemData growFactor="1" />
                         </layoutData>
                     </Switch>
 
-                </VBox>
+                </HBox>
                 <!-- Icon Buttons Section -->
-                <HBox justifyContent="SpaceAround" alignItems="Center" class="sapUiSmallMargin ">
+                <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiTinyMargin ">
                     <core:Icon src="sap-icon://media-rewind" size="2em" color="#031E48" press="onIconBackReadPress" />
-                    <core:Icon src="sap-icon://media-play" size="2em" color="#031E48" press="onIconStartReadPress" />
+                    <core:Icon src="{= ${configModel>/readWebsite/isPlaying} ? 'sap-icon://pause' : 'sap-icon://media-play'}" size="2em" color="#031E48" press="onIconStartReadPress" />
 
                     <core:Icon src="sap-icon://stop" size="2em" color="#031E48" press="onIconStopReadPress" />
 
                     <core:Icon src="sap-icon://media-forward" size="2em" color="#031E48" />
-
-                            <Button icon="sap-icon://reset" press=".onButtonFontSizeChangePress('reset')" class="fontSizeButton" />
-
-
                 </HBox>
 
                 <!-- Speed and Volume Controls -->
-                <HBox justifyContent="SpaceAround" alignItems="Center" class="sapUiSmallMargin sapUiLargeMarginTop">
-                    <VBox>
+                <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMargin sapUiTinyMarginTop">
+                    <VBox justifyContent="Center" alignItems="Center" class="sapUiTinyMarginBeginEnd" >
                         <Text text="Speed" class="sapUiTinyMarginBottom sapUiTinyMarginTop" textAlign="Center" />
                         <HBox justifyContent="Center" alignItems="Center">
                             <Button text="-" press="onButtonDecreaseSpeedPress" />
@@ -35,9 +31,9 @@
                         </HBox>
                     </VBox>
 
-                    <Text text="|" class="sapUiSmallMarginHorizontal" />
+                   
 
-                    <VBox>
+                    <VBox justifyContent="Center" alignItems="Center" class="sapUiTinyMarginBeginEnd">
                         <Text text="Volume" class="sapUiTinyMarginBottom sapUiTinyMarginTop" textAlign="Center" />
                         <HBox justifyContent="Center" alignItems="Center">
                             <Button text="-" press="onButtonDecreaseVolumePress" />

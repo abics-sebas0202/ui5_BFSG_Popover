@@ -9,10 +9,13 @@ const { updateFontSize } = require("./js/fontsize");
 const { initModel } = require("./js/config");
 const keyboardShortcutsData = require("./model/keyboardShortcuts.json");
 const {
-  startReading,
+  startOrPauseReading,
   stopReading,
+  onSwitchPointerReadChange,
   increaseSpeed,
   decreaseSpeed,
+  increaseVolume,
+  decreaseVolume,
   getVisibleTextFromPage,
 } = require("./js/readWebsite");
 const {
@@ -21,7 +24,6 @@ const {
   contrastPreviewTextColorPress,
   onButtonContrastResetPress,
   onSaveButtonPress,
-  onCancelButtonPress,
 } = require("./js/contrast");
 const { onButtonBlueFilterPress, onBlueFilterIntensitySliderLiveChange } = require("./js/bluefilter");
 const { onNightModeButtonPress } = require("./js/nightmode");
@@ -91,12 +93,17 @@ class npm_popover {
 
   onIconStartReadPress() {
     const getVisibleText = getVisibleTextFromPage;
-    startReading(this.configModel, this.speechSynth, getVisibleText);
+    startOrPauseReading(this.configModel, this.speechSynth, getVisibleText);
   }
 
   onIconStopReadPress() {
     stopReading(this.configModel, this.speechSynth);
   }
+
+  onSwitchPointerReadChange(oEvent) {
+    onSwitchPointerReadChange(oEvent, this.configModel, this.speechSynth);
+  }
+  
 
   onButtonIncreaseSpeedPress() {
     increaseSpeed(this.configModel, null, this.speechSynth);
@@ -104,6 +111,14 @@ class npm_popover {
 
   onButtonDecreaseSpeedPress() {
     decreaseSpeed(this.configModel, null, this.speechSynth);
+  }
+
+  onButtonIncreaseVolumePress() {
+    increaseVolume(this.configModel);
+  }
+
+  onButtonDecreaseVolumePress() {
+    decreaseVolume(this.configModel);
   }
 
   // Read Website Feature Handlers End
@@ -128,10 +143,6 @@ class npm_popover {
 
   onSaveButtonPress() {
     onSaveButtonPress(this.view, this.configModel);
-  }
-
-  onCancelButtonPress() {
-    onCancelButtonPress(this.view, this.configModel);
   }
 
   // Contrast Mode End
