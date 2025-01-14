@@ -1,32 +1,5 @@
 const sapMessageToast = require("sap/m/MessageToast");
 
-// function startReading(oModel, speechSynth, getVisibleText) {
-//   if (oModel.getProperty("/readWebsite/isPlaying")) {
-//     sapMessageToast.show("Reading is already in progress.");
-//     return;
-//   }
-
-//   const sText = getVisibleText();
-//   if (!sText) {
-//     sapMessageToast.show("No readable content found.");
-//     return;
-//   }
-
-//   oModel.setProperty("/readWebsite/currentText", sText);
-
-//   const utterance = new SpeechSynthesisUtterance(sText);
-//   configureUtterance(utterance, oModel, speechSynth);
-//   speechSynth.speak(utterance);
-// }
-
-// function stopReading(oModel, speechSynth) {
-//   if (speechSynth.speaking || speechSynth.pending) {
-//     speechSynth.cancel();
-//     oModel.setProperty("/readWebsite/isPlaying", false);
-//     sapMessageToast.show("Reading stopped.");
-//   }
-// }
-
 function startOrPauseReading(oModel, speechSynth, getVisibleText) {
   const isPlaying = oModel.getProperty("/readWebsite/isPlaying");
   const isPointerReadEnabled = oModel.getProperty("/readWebsite/isPointerReadEnabled");
@@ -37,12 +10,10 @@ function startOrPauseReading(oModel, speechSynth, getVisibleText) {
   }
 
   if (isPlaying) {
-    // Pause reading
     speechSynth.pause();
     oModel.setProperty("/readWebsite/isPlaying", false);
     sapMessageToast.show("Reading paused.");
   } else {
-    // Start or resume reading
     if (speechSynth.paused) {
       speechSynth.resume();
       oModel.setProperty("/readWebsite/isPlaying", true);
@@ -95,7 +66,7 @@ function onSwitchPointerReadChange(oEvent, oModel, speechSynth) {
 function enablePointerRead(oModel, speechSynth) {
   // Mouseover olayını dinle
   document.body.addEventListener("mouseover", (event) => {
-    if (!oModel.getProperty("/readWebsite/isPointerReadEnabled")) return; // Switch kapalıysa çalışmasın
+    if (!oModel.getProperty("/readWebsite/isPointerReadEnabled")) return; 
 
     const text = event.target.innerText?.trim();
     if (text && text !== "") {
@@ -151,9 +122,9 @@ function increaseSpeed(oModel, utterance, speechSynth) {
     oModel.setProperty("/readWebsite/speed", newSpeed);
 
     if (utterance && speechSynth.speaking) {
-      utterance.rate = newSpeed; // Konuşma hızı ayarı
-      speechSynth.cancel(); // Mevcut sesi durdur
-      speechSynth.speak(utterance); // Yeni ayarlarla konuşmayı başlat
+      utterance.rate = newSpeed; 
+      speechSynth.cancel(); 
+      speechSynth.speak(utterance);
       sapMessageToast.show(`Speed increased to ${newSpeed}x.`);
     } else {
       sapMessageToast.show(`Speed set to ${newSpeed}x. Start reading to apply.`);
@@ -171,9 +142,9 @@ function decreaseSpeed(oModel, utterance, speechSynth) {
     oModel.setProperty("/readWebsite/speed", newSpeed);
 
     if (utterance && speechSynth.speaking) {
-      utterance.rate = newSpeed; // Konuşma hızı ayarı
-      speechSynth.cancel(); // Mevcut sesi durdur
-      speechSynth.speak(utterance); // Yeni ayarlarla konuşmayı başlat
+      utterance.rate = newSpeed; 
+      speechSynth.cancel(); 
+      speechSynth.speak(utterance); 
       sapMessageToast.show(`Speed decreased to ${newSpeed}x.`);
     } else {
       sapMessageToast.show(`Speed set to ${newSpeed}x. Start reading to apply.`);
@@ -184,8 +155,8 @@ function decreaseSpeed(oModel, utterance, speechSynth) {
 }
 
 function configureUtterance(utterance, oModel, speechSynth) {
-  utterance.rate = parseFloat(oModel.getProperty("/readWebsite/speed")); // Hızı ayarla
-  utterance.volume = parseFloat(oModel.getProperty("/readWebsite/volume")) / 100; // Ses seviyesini ayarla
+  utterance.rate = parseFloat(oModel.getProperty("/readWebsite/speed")); 
+  utterance.volume = parseFloat(oModel.getProperty("/readWebsite/volume")) / 100; 
   utterance.lang = "en-US";
 
   utterance.onstart = () => oModel.setProperty("/readWebsite/isPlaying", true);
