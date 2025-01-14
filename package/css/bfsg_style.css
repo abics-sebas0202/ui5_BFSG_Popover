@@ -37,12 +37,6 @@ html, body {
 	width: 100%;
 }
 
-.accessPopoverHeaderIcons .sapMBtnInner{
-	border: none;
-	outline: none;
-	width: 100%;
-}
-
 .titleStyle{
     font-size: small !important;
     font-weight: bold !important;
@@ -96,6 +90,10 @@ html, body {
 	margin-left:50px !important;
 }
 
+#__panel0-expandButton{
+	margin-left: 10px !important;
+}
+
 #__panel1-expandButton{
 	margin-left: 10px !important;
 }
@@ -109,6 +107,7 @@ html, body {
 #__panel3-expandButton{
 	margin-left: 10px !important;
 }
+
 
 .expandPanel .sapMPanelContent{
 	padding: 20px !important;

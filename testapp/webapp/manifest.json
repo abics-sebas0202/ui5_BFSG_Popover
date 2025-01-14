@@ -1,5 +1,5 @@
 {
-    "_version": "1.60.0",
+    "_version": "1.65.0",
     "sap.app": {
         "id": "testapp",
         "type": "application",
@@ -11,8 +11,9 @@
         "description": "{{appDescription}}",
         "resources": "resources.json",
         "sourceTemplate": {
-            "id": "@sap-ux/fiori-freestyle-writer:basic",
-            "version": "0.21.10"
+            "id": "@sap/generator-fiori:basic",
+            "version": "1.16.1",
+            "toolsId": "3abd95ec-7245-4333-a65b-c74654cc1771"
         }
     },
     "sap.ui": {
@@ -34,7 +35,7 @@
     "sap.ui5": {
         "flexEnabled": false,
         "dependencies": {
-            "minUI5Version": "1.128.1",
+            "minUI5Version": "1.131.1",
             "libs": {
                 "sap.m": {},
                 "sap.ui.core": {}
@@ -62,37 +63,36 @@
         "routing": {
             "config": {
                 "routerClass": "sap.m.routing.Router",
-                "viewType": "XML",
-                "async": true,
-                "viewPath": "testapp.view",
                 "controlAggregation": "pages",
-                "controlId": "idApp",
-                "clearControlAggregation": false
+                "controlId": "idRootApp",
+                "transition": "slide",
+                "type": "View",
+                "viewType": "XML",
+                "path": "testapp.view",
+                "async": true,
+                "viewPath": "testapp.view"
             },
             "routes": [
                 {
-                    "name": "RouteMainView",
-                    "pattern": ":?query:",
+                    "name": "Main",
+                    "pattern": "",
                     "target": [
-                        "TargetMainView"
+                        "MainView"
                     ]
                 }
             ],
             "targets": {
-                "TargetMainView": {
-                    "viewType": "XML",
-                    "transition": "slide",
-                    "clearControlAggregation": false,
-                    "viewId": "MainView",
-                    "viewName": "MainView"
+                "MainView": {
+                    "name": "Main",
+                    "type": "View",
+                    "id": "MainView"
                 }
             }
         },
         "rootView": {
             "viewName": "testapp.view.App",
             "type": "XML",
-            "async": true,
-            "id": "idApp"
+            "id": "App"
         }
     }
 }

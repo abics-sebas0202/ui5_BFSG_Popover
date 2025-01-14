@@ -1,0 +1,87 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core">
+    <FlexBox justifyContent="Center" alignItems="Center" direction="Column">
+        <VBox class="contrastmode-container" alignItems="Center" justifyContent="SpaceBetween">
+            <Text text="Background Color:" class="contrastmode-section sapUiSmallMarginBottom" />
+            <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
+                <Button class="contrastmode-bg-black" press=".contrastPreviewBgColorPress">
+                    <customData>
+                        <core:CustomData key="color" value="black" />
+                    </customData>
+                </Button>
+                <Button class="contrastmode-bg-white" press=".contrastPreviewBgColorPress">
+                    <customData>
+                        <core:CustomData key="color" value="white" />
+                    </customData>
+                </Button>
+                <Button class="contrastmode-bg-red" press=".contrastPreviewBgColorPress">
+                    <customData>
+                        <core:CustomData key="color" value="red" />
+                    </customData>
+                </Button>
+                <Button class="contrastmode-bg-yellow" press=".contrastPreviewBgColorPress">
+                    <customData>
+                        <core:CustomData key="color" value="yellow" />
+                    </customData>
+                </Button>
+                <Button class="contrastmode-bg-green" press=".contrastPreviewBgColorPress">
+                    <customData>
+                        <core:CustomData key="color" value="green" />
+                    </customData>
+                </Button>
+                <Button class="contrastmode-bg-blue" press=".contrastPreviewBgColorPress">
+                    <customData>
+                        <core:CustomData key="color" value="blue" />
+                    </customData>
+                </Button>
+            </HBox>
+            <Text text="Text Color:" class="contrastmode-section sapUiSmallMarginBottom" />
+            <HBox justifyContent="SpaceBetween" alignItems="Center" class="sapUiSmallMarginBottom">
+                <Button class="contrastmode-text-black" press=".contrastPreviewColorPress">
+                    <customData>
+                        <core:CustomData key="color" value="black" />
+                    </customData>
+                </Button>
+                <Button class="contrastmode-text-white" press=".contrastPreviewTextColorPress">
+                    <customData>
+                        <core:CustomData key="color" value="white" />
+                    </customData>
+                </Button>
+                <Button class="contrastmode-text-red" press=".contrastPreviewTextColorPress">
+                    <customData>
+                        <core:CustomData key="color" value="red" />
+                    </customData>
+                </Button>
+                <Button class="contrastmode-text-yellow" press=".contrastPreviewTextColorPress">
+                    <customData>
+                        <core:CustomData key="color" value="yellow" />
+                    </customData>
+                </Button>
+                <Button class="contrastmode-text-green" press=".contrastPreviewTextColorPress">
+                    <customData>
+                        <core:CustomData key="color" value="green" />
+                    </customData>
+                </Button>
+                <Button class="contrastmode-text-blue" press=".contrastPreviewTextColorPress">
+                    <customData>
+                        <core:CustomData key="color" value="blue" />
+                    </customData>
+                </Button>
+            </HBox>
+            <Text text="Preview:" class="contrastmode-section sapUiSmallMarginBottom" />
+            <HBox class="contrastmode-preview sapUiSmallMarginBottom">
+                <Text id="idCanYouReadThisText" text="Can You Read This?" />
+            </HBox>
+        </VBox>
+        <Toolbar class="contrastmode-footer sapUiTinyMarginTop">
+            <ToolbarSpacer />
+            <FlexBox class="contrast-mode-footer">
+                <Button icon="sap-icon://reset" tooltip="Reset Changes" press=".onButtonContrastResetPress"/>
+                <Button text="Save" type="Accept" press=".onSaveButtonPress" />
+                <Button text="Cancel" type="Reject" press=".onCancelButtonPress" />
+
+            </FlexBox>
+        </Toolbar>
+    </FlexBox>
+</core:FragmentDefinition>

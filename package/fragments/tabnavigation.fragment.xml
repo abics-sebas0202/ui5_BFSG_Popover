@@ -1,6 +1,5 @@
 <core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
     <ResponsivePopover
-        id="idKeyboardShortcutsResponsivePopover"
         title="Guide to Using Keyboard Shortcuts"
 		class="tabNavigationResponsivePopover"
         placement="Left">

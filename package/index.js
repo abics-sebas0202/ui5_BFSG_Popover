@@ -1,263 +1,245 @@
-const JSONModel = require('sap/ui/model/json/JSONModel');
-const Fragment = require('sap/ui/core/Fragment');
-const MessageToast = require('sap/m/MessageToast');
+const JSONModel = require("sap/ui/model/json/JSONModel");
+const { fetchStyle } = require("./js/helper");
+const {
+  onTabNavigationButtonPress,
+  onMoreFeaturesButtonPress,
+} = require("./js/popover");
+const { buildPopover, open, onClose } = require("./js/builder");
+const { updateFontSize } = require("./js/fontsize");
+const { initModel } = require("./js/config");
+const keyboardShortcutsData = require("./model/keyboardShortcuts.json");
+const {
+  startReading,
+  stopReading,
+  increaseSpeed,
+  decreaseSpeed,
+  getVisibleTextFromPage,
+} = require("./js/readWebsite");
 
-class BFSG_Popover {
-    constructor(view, control) {
-        this.view = view;
-        this.control = control;
+class npm_popover {
+  constructor(view, control) {
+    this.view = view;
+    this.control = control;
+    this.popover = null;
+    this.speechSynth = window.speechSynthesis;
+    fetchStyle();
 
-        this.genConfigModel();
-        this.buildPopover();
-        this.attachPress();
-        this.fetchStyle();
+    initModel(this.view);
+    this.configModel = this.view.getModel("configModel");
+    const keyboardShortcutsModel = new JSONModel(keyboardShortcutsData);
+    this.view.setModel(keyboardShortcutsModel, "keyboardShortcutsModel");
+  }
 
+  // Popover build, open, close functions begin
 
-        this._mouseHoverHandler = this._onMouseHoverRead.bind(this);
-        this._oSpeechSynth = window.speechSynthesis;
-        this._oUtterance = null;
+  async buildPopover() {
+    await buildPopover(this);
+  }
 
+  open(oButton, oData) {
+    open(oButton, oData, this);
+  }
+
+  onClose() {
+    onClose(this);
+  }
+
+  // Popover build, open, close functions end
+
+  // Sub Popover Open Handler Begin
+
+  onTabNavigationButtonPress(oEvent) {
+    onTabNavigationButtonPress(oEvent, { view: this.view });
+  }
+  onMoreFeaturesButtonPress(oEvent) {
+    onMoreFeaturesButtonPress(oEvent, { view: this.view });
+  }
+
+  // Sub Popover Open Handler End
+
+  // Font Size Feature Handlers Begin
+
+  onButtonFontSizeChangePress(action) {
+    updateFontSize(this.configModel, this.view, action);
+  }
+
+  // Font Size Feature Handlers End
+
+  // Read Website Feature Handlers Begin
+
+  onIconStartReadPress() {
+    const getVisibleText = getVisibleTextFromPage; 
+    startReading(this.configModel, this.speechSynth, getVisibleText);
+  }
+
+  onIconStopReadPress() {
+    stopReading(this.configModel, this.speechSynth);
+  }
+
+  onButtonIncreaseSpeedPress() {
+    increaseSpeed(this.configModel, null, this.speechSynth);
+  }
+
+  onButtonDecreaseSpeedPress() {
+    decreaseSpeed(this.configModel, null, this.speechSynth);
+  }
+
+  // Read Website Feature Handlers End
+
+  // Contrast Mode Begin
+
+  contrastPreviewBgColorPress(oEvent) {
+    const oButton = oEvent.getSource();
+    const aCustomData = oButton.getCustomData();
+
+    if (!aCustomData || aCustomData.length === 0) {
+        console.error("CustomData not found on button!");
+        return;
     }
 
-    genConfigModel () {
-        this.configModel = new JSONModel({
-            "fontConfig": {
-                fontSize: 16,
-                contrastMode: false
-            },
-            "contrastConfig": {
-                backgroundColor: "white",
-                textColor: "black",
-                previewBackgroundColor: "white",
-                previewTextColor: "black"    
-            },
-            "blueFilterConfig": {
-                blueFilterActive: false,
-                blueFilterIntensity: 32,
-                blaufilterExpanded: true    
-            },
-            "readWebsiteConfig": {
-                speed: 1.0,
-                volume: 40,
-                isPlaying: false,
-                isPaused: false,
-                currentText: "",
-                mouseReadingActive: false,
-                lastReadElement: null    
-            }
-        });
+    const sBgColor = aCustomData[0].getValue(); // CustomData'dan renk alın
 
-        this.view.setModel(this.configModel, "configModel");
+    // Text kontrolünü bul
+    const oTextControl = this.view.byId("idCanYouReadThisText");
+    let oDomRef;
+    if (oTextControl) {
+        oDomRef = oTextControl.getDomRef(); // DOM referansı al
+    } else {
+        console.error("Text control not found in SAPUI5 context! Trying direct DOM ID access...");
+        oDomRef = document.getElementById("container-testapp---MainView--uniquePopover--idCanYouReadThisText");
     }
 
-    changeFontSize(event) {
-        const size = this.getValue()
-        document.documentElement.style.fontSize = `${size}px`;
+    if (oDomRef) {
+        oDomRef.style.backgroundColor = sBgColor; // Arka plan rengini değiştir
+        this.configModel.setProperty("/contrast/buttonsVisible", true); // Butonları görünür yap
+    } else {
+        console.error("DOM element not found!");
     }
-    
-
-    updateFontSize (oModel, oView, action) {
-        const currentSize = oModel.getProperty("/fontConfig/fontSize");
-        let newSize = currentSize;
-
-        if (action === "increase" && currentSize < 40) {
-            newSize += 2;
-        } else if (action === "decrease" && currentSize > 10) {
-            newSize -= 2;
-        } else if (action === "reset") {
-            newSize = 16;
-        }
-
-        oModel.setProperty("/fontConfig/fontSize", newSize);
-        this.applyFontSizeToView(oView, newSize);
-    }
-
-    applyFontSizeToView (oView, fontSize) {
-        oView.findAggregatedObjects(true, (oControl) => {
-            const oDomRef = oControl.getDomRef();
-            if (oDomRef) {
-                oDomRef.style.fontSize = fontSize + "px";
-                this.updateChildFontSize(oDomRef, fontSize);
-            }
-            return false;
-        });
-    }
-    
-    updateChildFontSize (domElement, fontSize) {
-        const childNodes = domElement.querySelectorAll("*");
-        childNodes.forEach((child) => {
-            child.style.fontSize = fontSize + "px";
-        });
-    }
-
-    onButtonFontSizeChangePress (action) {
-        this.updateFontSize(this.configModel, this.view, action);
-    }
-
-    attachPress() {
-        this.control.attachPress(this.open, this);
-    }
-
-    async buildPopover() {
-        const popover = await Fragment.load({
-            name: "ui5_bfsg_popover.popover",
-            controller: this
-        });
-        this.popover = popover;
-        this.view.addDependent(this.popover);
-    }
-
-    fetchStyle () {
-        let link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.type = 'text/css';
-        link.href = 'resources/ui5_bfsg_popover/bfsg_style.css';
-    
-        let headScript = document.querySelector('script');
-        headScript.parentNode.insertBefore(link, headScript);
-    };
-
-
-    open(event) {        
-        this.popover.openBy(event.getSource());
-    }
-
-  
-
-    // Font Size Begin
-
-  
-
-
-    closePopover() {
-        this.popover.close();
-    }
-
-    // Popover Open Begin
-
-    onReadWebsiteButtonPress(oEvent) {
-        this.handlePopover(oEvent, this.view, "ui5._bfsg_popover.view.fragments.readwebsite", "_pReadWebsitePopover");
-    }
-
-    onMoreColorsButtonPress(oEvent) {
-        this.handlePopover(oEvent, this.view, "ui5_bfsg_popover.view.fragments.morecolors", "_oMoreColorsPopover");
-    }
-            
-    onImageAccessPress(oEvent) {
-        this.handlePopover(oEvent, this.view, "ui5_bfsg_popover.view.fragments.accesspopover", "_oPopover");
-    }
-
-    onButtonSettingsPress(oEvent) {
-        this.handlePopover(oEvent, this.view, "ui5_bfsg_popover.view.fragments.settings", "_pSettingsPopover");
-    }
-
-    onButtonInfoPress(oEvent) {
-        this.handlePopover(oEvent, this.view, "ui5_bfsg_popover.view.fragments.info", "_pInfoPopover");
-    }
-
-    onInstantViewButtonPress(oEvent) {
-        this.handlePopover(oEvent, this.view, "ui5_bfsg_popover.view.fragments.instantview", "_pInstantViewPopover");
-    }
-
-
-    onTabNavigationButtonPress(oEvent) {
-        this.handlePopover(oEvent, this.view, "ui5_bfsg_popover.view.fragments.tabnavigation", "_pTabNavigationPopover");
-    }
-
-    onColorBlindnessButtonPress(oEvent) {
-        this.handlePopover(oEvent, this.view, "ui5_bfsg_popover.view.fragments.colorblindness", "_pColorBlindnessPopover");
-    }
-
-    onHideImagesButtonPress(oEvent) {
-        this.handlePopover(oEvent, this.view, "ui5_bfsg_popover.view.fragments.hideimages", "_pHideImagesPopover");
-    }
-
-    onMoreFeaturesButtonPress(oEvent) {
-        this.handlePopover(oEvent, this.view, "ui5_bfsg_popover.view.fragments.morefeatures", "_pMoreFeaturesPopover");
-    }
-
-    handlePopover(oEvent, oView, fragmentName, popoverKey) {
-        if (!this[popoverKey]) {
-            this[popoverKey] = Fragment.load({
-                id: oView.getId(),
-                name: fragmentName,
-                controller: oView.getController()
-            })
-            .then(function (oPopover) {
-                oView.addDependent(oPopover);
-                return oPopover;
-            }.bind(this))
-            .catch(function (err) {
-                console.error("Fragment yüklenirken hata oluştu:", err);
-            });
-        }
-        this[popoverKey].then(function (oPopover) {
-            if (oPopover) {
-                oPopover.openBy(oEvent.getSource());
-            } else {
-                console.error("Popover yüklenemedi veya bulunamadı.");
-            }
-        });
-    }
-
-    // Popover Open End
-
-    //Contrast Mode Begin
-
-    onButtonBackgroundPress(color) {
-        const contrastConfig = this.configModel.getProperty("/contrastConfig");
-        contrastConfig.backgroundColor = color;
-        this.configModel.setProperty("/contrastConfig", contrastConfig);
-        this.updatePreview();
-    }
-
-    onButtonTextPress(color) {
-        const contrastConfig = this.configModel.getProperty("/contrastConfig");
-        contrastConfig.textColor = color;
-        this.configModel.setProperty("/contrastConfig", contrastConfig);
-        this.updatePreview();
-    }
-
-    updatePreview() {
-        const contrastConfig = this.configModel.getProperty("/contrastConfig");
-        const previewElement = document.getElementById("idCanYouReadThisText");
-        if (previewElement) {
-            previewElement.style.backgroundColor = contrastConfig.backgroundColor;
-            previewElement.style.color = contrastConfig.textColor;
-        }
-    }
-
-    onSaveButtonPress() {
-        const contrastConfig = this.configModel.getProperty("/contrastConfig");
-
-        const allElements = document.body.querySelectorAll("*:not(#idMoreColorsResponsivePopover *)");
-        allElements.forEach((element) => {
-            element.style.backgroundColor = contrastConfig.backgroundColor;
-            element.style.color = contrastConfig.textColor;
-        });
-
-        this.closePopover();
-    }
-
-    onResetButtonPress() {
-        this.configModel.setProperty("/contrastConfig", { 
-            backgroundColor: "white", 
-            textColor: "black", 
-            previewBackgroundColor: "white", 
-            previewTextColor: "black" 
-        });
-        this.updatePreview();
-    }
-
-    onCancelButtonPress() {
-        this.updatePreview();
-        this.closePopover();
-    }
-
-
-    //Contrast Mode End
-
-
 }
 
-module.exports = BFSG_Popover
+
+
+
+  contrastPreviewTextColorPress(oEvent) {
+    const oButton = oEvent.getSource();
+    const aCustomData = oButton.getCustomData();
+
+    if (!aCustomData || aCustomData.length === 0) {
+        console.error("CustomData not found on button!");
+        return;
+    }
+
+    const sTextColor = aCustomData[0].getValue(); // CustomData'dan renk alın
+
+    // Text kontrolünü bul
+    const oTextControl = this.view.byId("idCanYouReadThisText");
+    let oDomRef;
+    if (oTextControl) {
+        oDomRef = oTextControl.getDomRef(); // DOM referansı al
+    } else {
+        console.error("Text control not found in SAPUI5 context! Trying direct DOM ID access...");
+        oDomRef = document.getElementById("container-testapp---MainView--uniquePopover--idCanYouReadThisText");
+    }
+
+    if (oDomRef) {
+        oDomRef.style.color = sTextColor; // Metin rengini değiştir
+        this.configModel.setProperty("/contrast/buttonsVisible", true); // Butonları görünür yap
+    } else {
+        console.error("DOM element not found!");
+    }
+}
+
+
+
+
+  onButtonContrastResetPress() {
+    const sDefaultBgColor = "white";
+    const sDefaultTextColor = "black";
+
+    // Text kontrolünü bul
+    const oTextControl = this.view.byId("idCanYouReadThisText");
+    let oDomRef;
+    if (oTextControl) {
+        oDomRef = oTextControl.getDomRef(); // DOM referansı al
+    } else {
+        console.error("Text control not found in SAPUI5 context! Trying direct DOM ID access...");
+        oDomRef = document.getElementById("container-testapp---MainView--uniquePopover--idCanYouReadThisText");
+    }
+
+    if (oDomRef) {
+        oDomRef.style.backgroundColor = sDefaultBgColor;
+        oDomRef.style.color = sDefaultTextColor;
+    } else {
+        console.error("DOM element not found!");
+    }
+
+    // Butonları gizle
+    this.configModel.setProperty("/contrast/buttonsVisible", false);
+    console.log("Colors have been reset to default values.");
+}
+
+
+
+  onSaveButtonPress() {
+    const oTextControl = this.view.byId("idCanYouReadThisText");
+    let oDomRef;
+    if (oTextControl) {
+        oDomRef = oTextControl.getDomRef();
+    } else {
+        console.error("Text control not found in SAPUI5 context! Trying direct DOM ID access...");
+        oDomRef = document.getElementById("container-testapp---MainView--uniquePopover--idCanYouReadThisText");
+    }
+
+    if (oDomRef) {
+        const sCurrentBgColor = oDomRef.style.backgroundColor || "white";
+        const sCurrentTextColor = oDomRef.style.color || "black";
+
+        console.log(`Saved settings: Background Color = ${sCurrentBgColor}, Text Color = ${sCurrentTextColor}`);
+    } else {
+        console.error("DOM element not found for saving!");
+    }
+
+    // Butonları gizle
+    this.configModel.setProperty("/contrast/buttonsVisible", false);
+}
+
+
+
+  onCancelButtonPress() {
+    const oModel = this.view.getModel("configModel");
+    if (oModel) {
+        const sBgColor = oModel.getProperty("/contrast/backgroundColor");
+        const sTextColor = oModel.getProperty("/contrast/textColor");
+
+        const oTextControl = this.view.byId("idCanYouReadThisText");
+        let oDomRef;
+        if (oTextControl) {
+            oDomRef = oTextControl.getDomRef();
+        } else {
+            console.error("Text control not found in SAPUI5 context! Trying direct DOM ID access...");
+            oDomRef = document.getElementById("container-testapp---MainView--uniquePopover--idCanYouReadThisText");
+        }
+
+        if (oDomRef) {
+            oDomRef.style.backgroundColor = sBgColor;
+            oDomRef.style.color = sTextColor;
+        } else {
+            console.error("DOM element not found!");
+        }
+
+        // Butonları gizle
+        oModel.setProperty("/contrast/buttonsVisible", false);
+        console.log("Changes have been canceled.");
+    }
+}
+
+
+
+
+
+
+
+  // Contrast Mode End
+}
+
+module.exports = npm_popover;

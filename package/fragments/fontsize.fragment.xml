@@ -1,0 +1,10 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+    <FlexBox direction="Column" alignItems="Center" justifyContent="Center" class="fontSizeControlContainer">
+        <Text text="{configModel>/font/fontSize}" class="fontSizeDisplay" />
+        <FlexBox alignItems="Center" justifyContent="Center" class="fontSizeButtonsContainer">
+            <Button icon="sap-icon://less" press=".onButtonFontSizeChangePress('decrease')" class="fontSizeButton" />
+            <Button icon="sap-icon://reset" press=".onButtonFontSizeChangePress('reset')" class="fontSizeButton" />
+            <Button icon="sap-icon://add" press=".onButtonFontSizeChangePress('increase')" class="fontSizeButton" />
+        </FlexBox>
+    </FlexBox>
+</core:FragmentDefinition>

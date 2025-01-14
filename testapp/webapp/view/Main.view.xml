@@ -1,0 +1,58 @@
+<mvc:View
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    controllerName="testapp.controller.App">
+     <Page id="idMainViewPage" title="Simple Popover Test">
+        <content>
+            <Image class="idOpenPopoverImageClass"  id="idOpenPopoverImage" src="https://www.designedtoinspire.com/blog/wp-content/uploads/2019/05/accessibility-symbol.png" width="80px" press=".onImageOpenPopoverPress" />
+            <FlexBox wrap="Wrap" class="sapUiLargeMarginTop" justifyContent="SpaceBetween" alignItems="Center" width="100%">
+            	<Image src="https://gratisography.com/wp-content/uploads/2024/03/gratisography-funflower-800x525.jpg" width="300px" />
+            	<Image src="https://gratisography.com/wp-content/uploads/2024/01/gratisography-cyber-kitty-800x525.jpg" width="300px" />
+            	<Image src="https://gratisography.com/wp-content/uploads/2024/10/gratisography-happy-cone-800x525.jpg" width="300px" />
+            
+            </FlexBox>
+             <Table id="idSimpleTable" class="sapUiLargeMarginTop sapUiResponsiveMargin" width="700px" >
+                <headerToolbar>
+                    <Toolbar>
+                        <Title text="Sample Data Table" />
+                    </Toolbar>
+                </headerToolbar>
+                <columns>
+                    <Column>
+                        <Text text="ID" />
+                    </Column>
+                    <Column>
+                        <Text text="Name" />
+                    </Column>
+                    <Column>
+                        <Text text="Age" />
+                    </Column>
+                </columns>
+                <items>
+                    <ColumnListItem>
+                        <cells>
+                            <Text text="1" />
+                            <Text text="John Doe" />
+                            <Text text="28" />
+                        </cells>
+                    </ColumnListItem>
+                    <ColumnListItem>
+                        <cells>
+                            <Text text="2" />
+                            <Text text="Jane Smith" />
+                            <Text text="34" />
+                        </cells>
+                    </ColumnListItem>
+                    <ColumnListItem>
+                        <cells>
+                            <Text text="3" />
+                            <Text text="Sam Brown" />
+                            <Text text="22" />
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+   
+        </content>
+    </Page>
+</mvc:View>
